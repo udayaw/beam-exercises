@@ -1,7 +1,7 @@
 package standard_pipelines;
 
 import common.FSUtils;
-import custom_beam_source.BoundedRandomStringSource;
+import source.BoundedRandomStringSource;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.options.PipelineOptions;

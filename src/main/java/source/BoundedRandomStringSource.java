@@ -1,4 +1,4 @@
-package custom_beam_source;
+package source;
 
 import org.apache.beam.repackaged.core.org.apache.commons.lang3.RandomStringUtils;
 import org.apache.beam.sdk.coders.Coder;
@@ -8,10 +8,14 @@ import org.apache.beam.sdk.io.OffsetBasedSource;
 import org.apache.beam.sdk.io.Read;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.ValueProvider;
+import org.apache.beam.sdk.testing.TestStream;
 import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.PTransform;
+import org.apache.beam.sdk.util.Sleeper;
 import org.apache.beam.sdk.values.PBegin;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.values.TimestampedValue;
+import org.joda.time.Instant;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -27,38 +31,6 @@ public class BoundedRandomStringSource {
         return Create.ofProvider(ValueProvider.StaticValueProvider.of(val), StringUtf8Coder.of());
     }
 
-    public static PTransform<PBegin, PCollection<String>> withDelayedStrings(String[] windowBound, String[] delayed, long delayMillies){
-        return Create.of(() -> new Iterator<String>(){
-            private int i = 0;
-            private String[] current = windowBound;
-
-            @Override
-            public boolean hasNext() {
-
-                //switchover
-                if( current == windowBound && i >= current.length){
-                    current = delayed;
-                    i = 0;
-                }
-
-                return current != null && (current == windowBound || (current == delayed && i < current.length));
-            }
-
-            @Override
-            public String next() {
-
-                if(current == delayed && i == 0){
-                    try {
-                        Thread.sleep(delayMillies);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                return current[i++];
-            }
-        }).withCoder(StringUtf8Coder.of());
-    }
 
     public static  PTransform<PBegin, PCollection<String>> getRandomCreateOf(int size){
         return Create.of(() -> new Iterator<String>(){

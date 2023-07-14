@@ -24,6 +24,9 @@ dependencies {
 //    implementation 'org.apache.beam:beam-runners-google-cloud-platform:2.43.0'
 //    implementation 'org.apache.beam:beam-sdks-java-core:2.43.0'
 
+
+    implementation 'commons-io:commons-io:2.12.0'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
